@@ -1,0 +1,28 @@
+select
+ ps_partkey,
+ sum(ps_supplycost * ps_availqty) as value
+from
+ partsupp,
+ supplier,
+ nation
+where
+ ps_suppkey = s_suppkey
+ and s_nationkey = n_nationkey
+ and n_name = 'ARGENTINA'
+group by
+ ps_partkey having
+ sum(ps_supplycost * ps_availqty) > (
+ select
+ sum(ps_supplycost * ps_availqty) * 0.0000010000
+ from
+ partsupp,
+ supplier,
+ nation
+ where
+ ps_suppkey = s_suppkey
+ and s_nationkey = n_nationkey
+ and n_name = 'ARGENTINA'
+ )
+order by
+ ps_partkey desc,
+ value desc;select '***', 'tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_11.sql_hawq', sess_id from pg_stat_activity where current_query like '%tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_11.sql_hawq%';

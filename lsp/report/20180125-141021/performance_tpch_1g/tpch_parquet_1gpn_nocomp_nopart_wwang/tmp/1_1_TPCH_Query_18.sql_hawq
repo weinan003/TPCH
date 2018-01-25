@@ -1,0 +1,37 @@
+select
+ c_name,
+ c_custkey,
+ o_orderkey,
+ o_orderdate,
+ o_totalprice,
+ sum(l_quantity) as total_quantity
+from
+ customer,
+ orders,
+ lineitem
+where
+ o_orderkey in (
+ select
+ l_orderkey
+ from
+ lineitem
+ group by
+ l_orderkey having
+ sum(l_quantity) > 314
+ )
+ and c_custkey = o_custkey
+ and o_orderkey = l_orderkey
+group by
+ c_name,
+ c_custkey,
+ o_orderkey,
+ o_orderdate,
+ o_totalprice
+order by
+ o_totalprice desc,
+ total_quantity desc,
+ o_orderdate,
+ c_name,
+ c_custkey,
+ o_orderkey
+LIMIT 100;select '***', 'tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_18.sql_hawq', sess_id from pg_stat_activity where current_query like '%tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_18.sql_hawq%';

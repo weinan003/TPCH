@@ -1,0 +1,19 @@
+select
+ s_suppkey,
+ s_name,
+ s_address,
+ s_phone,
+ total_revenue
+from
+ supplier,
+ revenue
+where
+ s_suppkey = supplier_no
+ and total_revenue = (
+ select
+ max(total_revenue)
+ from
+ revenue
+ )
+order by
+ s_suppkey;select '***', 'tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_15.sql_hawq', sess_id from pg_stat_activity where current_query like '%tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_15.sql_hawq%';

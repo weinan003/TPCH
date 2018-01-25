@@ -1,0 +1,17 @@
+select
+ sum(l_extendedprice) / 7.0 as avg_yearly
+from
+ lineitem,
+ part
+where
+ p_partkey = l_partkey
+ and p_brand = 'Brand#54'
+ and p_container = 'JUMBO CASE'
+ and l_quantity < (
+ select
+ 0.2 * avg(l_quantity)
+ from
+ lineitem
+ where
+ l_partkey = p_partkey
+ );select '***', 'tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_17.sql_hawq', sess_id from pg_stat_activity where current_query like '%tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_17.sql_hawq%';

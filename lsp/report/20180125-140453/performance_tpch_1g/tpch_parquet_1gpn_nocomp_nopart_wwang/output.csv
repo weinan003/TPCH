@@ -1,0 +1,148 @@
+4767 [2018-01-25 14:04:53] tpch_parquet_1gpn_nocomp_nopart ans_directory:/Users/wwang/TPCH_TEST/lsp/workloads/TPCH/queries_ans/queries_ans_1g does not exists
+4789 [2018-01-25 14:04:53] -- Start running workload tpch_parquet_1gpn_nocomp_nopart
+4789 [2018-01-25 14:04:53] -- Start loading data
+4789 [2018-01-25 14:04:54] drop database if exists tpch_parquet_1gpn_nocomp_nopart_wwang;
+4789 [2018-01-25 14:04:54] DROP DATABASE
+
+4789 [2018-01-25 14:04:54] create database tpch_parquet_1gpn_nocomp_nopart_wwang;
+4789 [2018-01-25 14:04:54] CREATE DATABASE
+
+4789 [2018-01-25 14:04:54] DROP TABLE IF EXISTS nation;
+DROP EXTERNAL WEB TABLE IF EXISTS e_nation;
+
+CREATE TABLE nation (
+    N_NATIONKEY  INTEGER NOT NULL,
+    N_NAME       CHAR(25) NOT NULL,
+    N_REGIONKEY  INTEGER NOT NULL,
+    N_COMMENT    VARCHAR(152) )
+WITH (appendonly = true, orientation = PARQUET, pagesize = 1048576, rowgroupsize = 8388608)
+DISTRIBUTED RANDOMLY;
+
+CREATE EXTERNAL WEB TABLE e_nation (
+    N_NATIONKEY  INTEGER,
+    N_NAME       CHAR(25),
+    N_REGIONKEY  INTEGER,
+    N_COMMENT    VARCHAR(152) )
+EXECUTE E'bash -c \"$GPHOME/bin/dbgen -b $GPHOME/bin/dists.dss -T n -s 1\"' 
+ON 1 FORMAT 'TEXT' (DELIMITER'|');
+
+INSERT INTO nation SELECT * FROM e_nation;
+
+4789 [2018-01-25 14:04:59] psql:/Users/wwang/TPCH_TEST/lsp/report/20180125-140453/performance_tpch_1g/tpch_parquet_1gpn_nocomp_nopart_wwang/tmp/nation.sql:1: NOTICE:  table "nation" does not exist, skipping
+DROP TABLE
+psql:/Users/wwang/TPCH_TEST/lsp/report/20180125-140453/performance_tpch_1g/tpch_parquet_1gpn_nocomp_nopart_wwang/tmp/nation.sql:2: NOTICE:  table "e_nation" does not exist, skipping
+DROP EXTERNAL TABLE
+CREATE TABLE
+CREATE EXTERNAL TABLE
+INSERT 0 0
+
+4789 [2018-01-25 14:04:59]    Loading=nation   Iteration=1   Stream=1   Status=SUCCESS   Time=5400
+4789 [2018-01-25 14:04:59] DROP TABLE IF EXISTS region;
+DROP EXTERNAL WEB TABLE IF EXISTS e_region;
+
+CREATE TABLE region (
+    R_REGIONKEY  INTEGER NOT NULL,
+    R_NAME       CHAR(25) NOT NULL,
+    R_COMMENT    VARCHAR(152) )
+WITH (appendonly = true, orientation = PARQUET, pagesize = 1048576, rowgroupsize = 8388608)
+DISTRIBUTED RANDOMLY;
+
+CREATE EXTERNAL WEB TABLE e_region (
+    R_REGIONKEY  INTEGER,
+    R_NAME       CHAR(25),
+    R_COMMENT    VARCHAR(152) )
+EXECUTE E'bash -c "$GPHOME/bin/dbgen -b $GPHOME/bin/dists.dss -T r -s 1 "' 
+ON 1 FORMAT 'TEXT' (DELIMITER '|');
+
+INSERT INTO region SELECT * FROM e_region;
+
+4789 [2018-01-25 14:05:05] psql:/Users/wwang/TPCH_TEST/lsp/report/20180125-140453/performance_tpch_1g/tpch_parquet_1gpn_nocomp_nopart_wwang/tmp/region.sql:1: NOTICE:  table "region" does not exist, skipping
+DROP TABLE
+psql:/Users/wwang/TPCH_TEST/lsp/report/20180125-140453/performance_tpch_1g/tpch_parquet_1gpn_nocomp_nopart_wwang/tmp/region.sql:2: NOTICE:  table "e_region" does not exist, skipping
+DROP EXTERNAL TABLE
+CREATE TABLE
+CREATE EXTERNAL TABLE
+INSERT 0 0
+
+4789 [2018-01-25 14:05:05]    Loading=region   Iteration=1   Stream=1   Status=SUCCESS   Time=5599
+4789 [2018-01-25 14:05:05] DROP TABLE IF EXISTS part;
+DROP EXTERNAL WEB TABLE IF EXISTS e_part;
+
+CREATE TABLE part (
+    P_PARTKEY     INTEGER NOT NULL,
+    P_NAME        VARCHAR(55) NOT NULL,
+    P_MFGR        CHAR(25) NOT NULL,
+    P_BRAND       CHAR(10) NOT NULL,
+    P_TYPE        VARCHAR(25) NOT NULL,
+    P_SIZE        INTEGER NOT NULL,
+    P_CONTAINER   CHAR(10) NOT NULL,
+    P_RETAILPRICE DECIMAL(15,2) NOT NULL,
+    P_COMMENT     VARCHAR(23) NOT NULL )
+WITH (appendonly = true, orientation = PARQUET, pagesize = 1048576, rowgroupsize = 8388608)
+DISTRIBUTED RANDOMLY;
+
+CREATE EXTERNAL WEB TABLE e_part (
+    P_PARTKEY     INTEGER,
+    P_NAME        VARCHAR(55),
+    P_MFGR        CHAR(25),
+    P_BRAND       CHAR(10),
+    P_TYPE        VARCHAR(25),
+    P_SIZE        INTEGER,
+    P_CONTAINER   CHAR(10),
+    P_RETAILPRICE DECIMAL(15,2),
+    P_COMMENT     VARCHAR(23) ) 
+EXECUTE E'bash -c "$GPHOME/bin/dbgen -b $GPHOME/bin/dists.dss -T P -s 1 -N 6 -n $((GP_SEGMENT_ID + 1))"'
+ON 6 FORMAT 'TEXT' (DELIMITER'|');
+
+INSERT INTO part SELECT * FROM e_part;
+
+4789 [2018-01-25 14:05:05] psql:/Users/wwang/TPCH_TEST/lsp/report/20180125-140453/performance_tpch_1g/tpch_parquet_1gpn_nocomp_nopart_wwang/tmp/part.sql:1: NOTICE:  table "part" does not exist, skipping
+DROP TABLE
+psql:/Users/wwang/TPCH_TEST/lsp/report/20180125-140453/performance_tpch_1g/tpch_parquet_1gpn_nocomp_nopart_wwang/tmp/part.sql:2: NOTICE:  table "e_part" does not exist, skipping
+DROP EXTERNAL TABLE
+CREATE TABLE
+CREATE EXTERNAL TABLE
+psql:/Users/wwang/TPCH_TEST/lsp/report/20180125-140453/performance_tpch_1g/tpch_parquet_1gpn_nocomp_nopart_wwang/tmp/part.sql:30: ERROR:  invalid byte sequence for encoding "UTF8": 0x00  (seg3 localhost:40000 pid=4828)
+DETAIL:  External table e_part, line 1 of file execute:bash -c "$GPHOME/bin/dbgen -b $GPHOME/bin/dists.dss -T P -s 1 -N 6 -n $((GP_SEGMENT_ID + 1))"
+
+4789 [2018-01-25 14:05:05]    Loading=part   Iteration=1   Stream=1   Status=ERROR   Time=311
+4789 [2018-01-25 14:05:05]    Loading=supplier   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Loading=partsupp   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Loading=customer   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Loading=orders   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Loading=lineitem   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Loading=revenue   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05] -- Complete loading data
+4789 [2018-01-25 14:05:05] -- Start loading external data
+4789 [2018-01-25 14:05:05] -- Start loading hive data
+4789 [2018-01-25 14:05:05] -- Finished loading hive data
+4789 [2018-01-25 14:05:05] -- Start exec grant.sql for database tpch_parquet_1gpn_nocomp_nopart_wwang
+4789 [2018-01-25 14:05:05] -- Complete exec grant.sql for database tpch_parquet_1gpn_nocomp_nopart_wwang
+4789 [2018-01-25 14:05:05] -- Start vacuum analyze
+4789 [2018-01-25 14:05:05]    VACUUM ANALYZE   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05] -- Complete vacuum analyze
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_01_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_02_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_03_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_04_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_05_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_06_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_07_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_08_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_09_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_10_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_11_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_12_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_13_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_14_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_15_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_16_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_17_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_18_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_19_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_20_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_21_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05]    Execution=TPCH_Query_22_hawq   Iteration=1   Stream=1   Status=ERROR   Time=0
+4789 [2018-01-25 14:05:05] -- Start exec revoke.sql for database tpch_parquet_1gpn_nocomp_nopart_wwang
+4789 [2018-01-25 14:05:05] -- Complete exec revoke.sql for database tpch_parquet_1gpn_nocomp_nopart_wwang
+4789 [2018-01-25 14:05:05] -- Complete running workload tpch_parquet_1gpn_nocomp_nopart

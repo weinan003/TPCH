@@ -1,0 +1,21 @@
+select
+ o_orderpriority,
+ count(*) as order_count
+from
+ orders
+where
+ o_orderdate >= date '1997-02-01'
+ and o_orderdate < date '1997-02-01' + interval '3 month'
+ and exists (
+ select
+ *
+ from
+ lineitem
+ where
+ l_orderkey = o_orderkey
+ and l_commitdate < l_receiptdate
+ )
+group by
+ o_orderpriority
+order by
+ o_orderpriority;select '***', 'tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_04.sql_hawq', sess_id from pg_stat_activity where current_query like '%tpch_parquet_1gpn_nocomp_nopart_wwang_1_1_TPCH_Query_04.sql_hawq%';
